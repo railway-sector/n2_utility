@@ -8,8 +8,6 @@ import {
   viaductLayer,
 } from "../layers";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-// import FeatureFilter from "@arcgis/core/layers/support/FeatureFilter";
-// import Query from "@arcgis/core/rest/support/Query";
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
@@ -22,9 +20,8 @@ import {
   generateUtilLineProgress,
   generateUtilPointChartData,
   generateUtilPointProgress,
-  // LineHighlightZoomToQuery,
-  highlightZoomToQuery,
   thousands_separators,
+  utilLayerViewQueryFeature,
   zoomToLayer,
 } from "../Query";
 import { ArcgisScene } from "@arcgis/map-components/dist/components/arcgis-scene";
@@ -55,13 +52,6 @@ const Chart = () => {
 
   const featureLayer = useRef<FeatureLayer>(utilityPointLayer1);
   const featureLayer1 = useRef<FeatureLayer>(utilityLineLayer1);
-
-  type layerViewQueryProps = {
-    featureLayer: FeatureLayer;
-    featureLayer1: FeatureLayer;
-    qExpression: any;
-    type: any;
-  };
 
   //Query
   const qCP = "CP = '" + contractp + "'";
@@ -385,28 +375,12 @@ const Chart = () => {
           qExpression = qAll;
         }
 
-        // FeatureLayer Query function
-        const utilLayerViewQueryFeature = ({
-          featureLayer,
-          featureLayer1,
-          qExpression,
-          type,
-        }: layerViewQueryProps) => {
-          if (!type) {
-            highlightZoomToQuery(featureLayer, qExpression, arcgisScene?.view);
-            highlightZoomToQuery(featureLayer1, qExpression, arcgisScene?.view);
-          } else if (type === "Point") {
-            highlightZoomToQuery(featureLayer, qExpression, arcgisScene?.view);
-          } else if (type === "Line") {
-            highlightZoomToQuery(featureLayer1, qExpression, arcgisScene?.view);
-          }
-        };
-
         utilLayerViewQueryFeature({
           featureLayer: featureLayer.current,
           featureLayer1: featureLayer1.current,
           qExpression: qExpression,
           type: type,
+          view: arcgisScene?.view,
         });
       });
       legend.data.push(series);

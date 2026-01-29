@@ -10,6 +10,7 @@ import {
 import StatisticDefinition from "@arcgis/core/rest/support/StatisticDefinition";
 import Query from "@arcgis/core/rest/support/Query";
 import FeatureFilter from "@arcgis/core/layers/support/FeatureFilter";
+import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 
 // Updat date
 export async function dateUpdate() {
@@ -631,6 +632,14 @@ export function zoomToLayer(layer: any, view: any) {
   });
 }
 
+type layerViewQueryProps = {
+  featureLayer: FeatureLayer;
+  featureLayer1: FeatureLayer;
+  qExpression: any;
+  type: any;
+  view: any;
+};
+
 export const highlightZoomToQuery = async (
   featureLayer: any,
   qExpression: any,
@@ -673,4 +682,22 @@ export const highlightZoomToQuery = async (
       highlightSelect && highlightSelect.remove();
     });
   });
+};
+
+// FeatureLayer Query function
+export const utilLayerViewQueryFeature = ({
+  featureLayer,
+  featureLayer1,
+  qExpression,
+  type,
+  view,
+}: layerViewQueryProps) => {
+  if (!type) {
+    highlightZoomToQuery(featureLayer, qExpression, view);
+    highlightZoomToQuery(featureLayer1, qExpression, view);
+  } else if (type === "Point") {
+    highlightZoomToQuery(featureLayer, qExpression, view);
+  } else if (type === "Line") {
+    highlightZoomToQuery(featureLayer1, qExpression, view);
+  }
 };
